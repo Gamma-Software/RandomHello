@@ -1,22 +1,42 @@
 package hello
 
-// User user type
-type User struct {
-	ID   int64
-	Name string
-	Addr *Address
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"math/rand"
+)
+
+type Hello struct {
+	Language string `json:"language"`
+	Hello    string `json:"hello"`
 }
 
-// Address address type
-type Address struct {
-	City   string
-	ZIP    int
-	LatLng [2]float64
+func ReadHellosEntries() []Hello {
+	jsonFile, err := ioutil.ReadFile("hello/hellos.json")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("Successfully Opened hellos.json")
+
+	var hellos []Hello
+	err = json.Unmarshal([]byte(jsonFile), &hellos)
+
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	return hellos
 }
 
-var alex = User{}
+func RandomHellos() Hello {
+	// Read json files from the directory
+	hellos := ReadHellosEntries()
 
-// Hello writes a welcome string
-func Hello() string {
-	return "Hello, " + alex.Name
+	// Get a random number between 0 and the length of the array
+	randomNumber := rand.Intn(len(hellos))
+
+	// Return the random hello
+	return hellos[randomNumber]
 }

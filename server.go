@@ -6,20 +6,21 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 
 	"github.com/microsoft/vscode-remote-try-go/hello"
 )
 
 func handle(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, hello.Hello())
+	fmt.Println("Endpoint Hit: randomhellos")
+	json.NewEncoder(w).Encode(hello.RandomHellos())
 }
 
 func main() {
 	portNumber := "9000"
-	http.HandleFunc("/", handle)
+	http.HandleFunc("/randomhellos", handle)
 	fmt.Println("Server listening on port ", portNumber)
 	http.ListenAndServe(":"+portNumber, nil)
 }
