@@ -1,0 +1,31 @@
+name: Docker Build And Deploy
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Retrieve Latest Tag
+      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+    - name: Version
+      run: echo ${{ env.RELEASE_VERSION }}
+    
+    - name: Build Docker image
+      run: |
+        docker build . --tag valentinrudloff/randomhellos:${{ env.RELEASE_VERSION }}
+    - name: Docker Login
+      env :
+        USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        docker login -u $USERNAME -p $PASSWORD
+    - name: Docker Push
+      run: |
+        docker push valentinrudloff/randomhellos:${{ env.RELEASE_VERSION }}
