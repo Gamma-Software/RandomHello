@@ -12,28 +12,21 @@ type Hello struct {
 	Hello    string `json:"hello"`
 }
 
-func ReadHellosEntries() []Hello {
-	jsonFile, err := ioutil.ReadFile("hello/hellos.json")
+var hellos []Hello
 
+func init() {
+	data, err := ioutil.ReadFile("hello/hellos.json")
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
-	fmt.Println("Successfully Opened hellos.json")
-
-	var hellos []Hello
-	err = json.Unmarshal([]byte(jsonFile), &hellos)
-
+	err = json.Unmarshal([]byte(data), &hellos)
 	if err != nil {
-		fmt.Println("error:", err)
+		panic(err)
 	}
-
-	return hellos
+	fmt.Println("Successfully opened hellos.json")
 }
 
 func RandomHellos() Hello {
-	// Read json files from the directory
-	hellos := ReadHellosEntries()
-
 	// Get a random number between 0 and the length of the array
 	randomNumber := rand.Intn(len(hellos))
 
