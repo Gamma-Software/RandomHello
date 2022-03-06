@@ -26,6 +26,9 @@ jobs:
         PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: |
         docker login -u $USERNAME -p $PASSWORD
-    - name: Docker Push
+    - name: Docker Push Version
       run: |
         docker push valentinrudloff/randomhellos:${{ env.RELEASE_VERSION }}
+    - name: Docker Push Latest
+      run: |
+        docker push valentinrudloff/randomhellos:latest
